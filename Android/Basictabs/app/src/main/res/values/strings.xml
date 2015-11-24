@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Basictabs</string>
+    <string name="app_name">DoseNet</string>
     <string name="app_subname1">DoseNet Map</string>
     <string name="hello_world">Hello world! This is DoseNet</string>
     <string name="action_settings">Settings</string>
