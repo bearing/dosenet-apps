@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.navrit.basictabs"
+        applicationId "com.navrit.dosenet"
         minSdkVersion 11
         targetSdkVersion 22
         versionCode 1
@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.google.android.gms:play-services-maps:7.5.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4+'
 }

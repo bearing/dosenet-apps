@@ -1,4 +1,4 @@
-package com.navrit.basictabs;
+package com.navrit.DoseNet;
 
 import android.content.Context;
 

@@ -1,8 +1,13 @@
-package com.navrit.basictabs;
+package com.navrit.DoseNet;
 
-import com.navrit.basictabs.app.AppController;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.navrit.DoseNet.app.AppController;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +16,6 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -28,29 +32,43 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import im.delight.android.location.SimpleLocation;
 import im.delight.android.location.SimpleLocation.Point;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements LocationListener{
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////// Global variables /////////////////////////////////////////
     private static String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private ProgressDialog pDialog;
-    private String jsonResponse; // temporary string to show the parsed response
     private Point userLocation;
     private double minimumDistance = 20037500; // [m] Half the circumference of the Earth
-    public Point closestDosimeter = new Point(51.5072,0.1275); // Initialise on London
-    public LatLng closestLatLong = new LatLng(51.5072,0.1275);
+    public LatLng closest = new LatLng(51.5072,0.1275);
     private String closestDosimeterName = "X";
+    protected LocationManager locationManager;
+    static double u_Lat;
+    static double u_Lng;
+    private boolean first = true;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setRotateGesturesEnabled(false);
 
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Wait, fool...!");
         pDialog.setCancelable(true);
-        // making json object request
-        makeJsonObjectRequest();
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+        userLocation = getLocation();
+
+        getParsePlotJSON(); //Main program logic
     }
 
     @Override
@@ -100,68 +118,60 @@ public class MapsActivity extends FragmentActivity {
     /**
      * Method to make json object request where json response starts with '{'
      * */
-    private void makeJsonObjectRequest() {
+    private void getParsePlotJSON() {
         showpDialog();
-        userLocation = getLocation();
 
         String urlJsonObj = "https://radwatch.berkeley.edu/sites/default/files/output.geojson";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.GET,
                 urlJsonObj, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //Log.v(TAG, response.toString());
+                Log.v(TAG, response.toString());
 
                 try {
                     // Parsing json object response - type json object
                     JSONArray station_array = response.getJSONArray("features");
                     Log.i("Number of dosimeters ", String.valueOf(station_array.length()));
-                    for (int i = 0; i < station_array.length(); i++) {
-                        JSONObject station = station_array.getJSONObject(i);
 
-                        JSONObject geometry = station
-                                .getJSONObject("geometry");
+                    for (int i = 0; i < station_array.length(); i++) {
+
+                        JSONObject station = station_array.getJSONObject(i);
+                        JSONObject geometry = station.getJSONObject("geometry");
                         JSONArray coordinates = geometry.getJSONArray("coordinates");
                         double longitude = coordinates.getDouble(0);
                         double latitude = coordinates.getDouble(1);
-
-                        JSONObject properties = station
-                                .getJSONObject("properties");
+                        JSONObject properties = station.getJSONObject("properties");
                         String name = properties.getString("Name");
                         String latest_measurement = properties.getString("Latest measurement");
                         double dose = properties.getDouble("Latest dose (&microSv/hr)");
 
-                        getClosestDosimeter(latitude, longitude, name);
-
-                        jsonResponse = "";
+                        /*jsonResponse = "";
                         jsonResponse += "Name: " + name + "\n\n";
-                        jsonResponse += "Latitude, Longitude: " + latitude + ", " + longitude + "\n\n";
+                        jsonResponse += "Latitude, Longitude: " + latitude + ", " +
+                                longitude + "\n\n";
                         jsonResponse += "Latest Measurement: " + latest_measurement + "\n\n";
-                        jsonResponse += "Latest dose (&microSv/hr): " + dose + "\n\n";
+                        jsonResponse += "Latest dose (&microSv/hr): " + dose + "\n\n";*/
 
                         String radiation_info = String.format("%.4f", dose)
-                                + " µSv/hr @ " +
-                                latest_measurement  + " PDT";
+                                + " µSv/hr @ " + latest_measurement  + " PDT";
                         mMap.addMarker(new MarkerOptions()
                                         .title(name)
                                         .snippet(radiation_info)
                                         .position(new LatLng(latitude, longitude))
                         );
 
+                        getClosestDosimeter(latitude, longitude, name);
+                        //mClusterManager.addItem(new Dosimeter(latitude, longitude, name, radiation_info));
                         //Log.i("JSON", jsonResponse);
                     }
-                    // Set user location pin
-                    mMap.addMarker(new MarkerOptions()
-                                    .title("You!")
-                                    .snippet("Your current rough location")
-                                    .position(new LatLng(userLocation.latitude,
-                                            userLocation.longitude))
-                    );
                     Log.i("DOSIMETR nearest", closestDosimeterName);
                     Toast.makeText(getApplicationContext(),
-                            ("Nearest dosimeter: "+closestDosimeterName),
+                            ("Nearest dosimeter (of " + String.valueOf(station_array.length())
+                                    + "): " + closestDosimeterName),
                             Toast.LENGTH_LONG).show();
                     // Centres on nearest dosimeter, non animated transition
-                    setUpMap(new LatLng(closestLatLong.latitude, closestLatLong.longitude), 9);
+                    setUpMap(new LatLng(closest.latitude, closest.longitude), 9);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),
@@ -177,7 +187,6 @@ public class MapsActivity extends FragmentActivity {
                 VolleyLog.e(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
-                // hide the progress dialog
                 hidepDialog();
             }
         });
@@ -186,32 +195,67 @@ public class MapsActivity extends FragmentActivity {
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
+    private Point getLocation() {
+        SimpleLocation s_location = new SimpleLocation(this);
+        // if we can't access the location yet
+        if (!s_location.hasLocationEnabled()) {
+            // ask the user to enable location access
+            SimpleLocation.openSettings(this);
+        }
+        final double latitude = s_location.getLatitude();
+        final double longitude = s_location.getLongitude();
+        // stop location updates (saves battery)
+        s_location.endUpdates();
+        //Log.i("Latitude, Longitude ", (String.valueOf(latitude))+", "+String.valueOf(longitude));
+        return new Point(latitude, longitude);
+    }
+
     public void getClosestDosimeter(double lat, double lon, String dosimeter) {
         Point pnt = new Point(lat, lon);
         double d = SimpleLocation.calculateDistance(userLocation, pnt);
         if (d <= minimumDistance){
             minimumDistance = d;
-            closestLatLong = new LatLng(lat,lon);
+            closest = new LatLng(lat,lon);
             closestDosimeterName = dosimeter;
-            Log.i("DOSIMETR calc closest", closestDosimeterName);
-            Log.i("DOSIMETR LatLng", String.valueOf(closestLatLong));
+            String msg = closestDosimeterName + d;
+            Log.i("DOSIMETR calc closest", msg);
+            Log.i("DOSIMETR LatLng", String.valueOf(closest));
         }
     }
 
-    private Point getLocation(){
-        SimpleLocation location = new SimpleLocation(this);
-        // if we can't access the location yet
-        if (!location.hasLocationEnabled()) {
-            // ask the user to enable location access
-            SimpleLocation.openSettings(this);
+    @Override
+    public void onLocationChanged(Location location) {
+        if (first) {
+            String msg = "Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude();
+            Log.i("Location changed", msg);
+
+            u_Lat = location.getLatitude();
+            u_Lng = location.getLongitude();
+
+            // Set user location pin
+            mMap.addMarker(new MarkerOptions()
+                    .title("You!")
+                    .snippet("Your current rough location")
+                    .position(new LatLng(u_Lat, u_Lng))
+                    .icon(BitmapDescriptorFactory.
+                            defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            first = false;
         }
-        final double latitude = location.getLatitude();
-        final double longitude = location.getLongitude();
-        // stop location updates (saves battery)
-        location.endUpdates();
-        //Log.i("Latitude, Longitude ", (String.valueOf(latitude))+", "+String.valueOf(longitude));
-        Point userPoint = new Point(latitude, longitude);
-        return userPoint;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude", "status");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude","disable");
     }
 
     private void showpDialog() {
@@ -219,6 +263,7 @@ public class MapsActivity extends FragmentActivity {
             pDialog.show();
     }
 
+    // hide the progress dialog
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
