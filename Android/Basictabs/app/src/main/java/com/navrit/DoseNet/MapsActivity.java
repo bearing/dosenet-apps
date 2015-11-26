@@ -53,19 +53,13 @@ public class MapsActivity extends FragmentActivity implements LocationListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        setUpMapIfNeeded();
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.getUiSettings().setRotateGesturesEnabled(false);
 
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Wait, fool...!");
-        pDialog.setCancelable(true);
+        setUpMapIfNeeded();
+
+        makepDialog();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
         userLocation = getLocation();
 
         getParsePlotJSON(); //Main program logic
@@ -75,6 +69,12 @@ public class MapsActivity extends FragmentActivity implements LocationListener{
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+    private void makepDialog(){
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Wait, fool...!");
+        pDialog.setCancelable(true);
     }
 
     /**
@@ -102,6 +102,10 @@ public class MapsActivity extends FragmentActivity implements LocationListener{
             if (mMap != null) {
                 LatLng berkeley = new LatLng(37.87, -122.27);
                 setUpMap(berkeley, 8);
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                mMap.getUiSettings().setCompassEnabled(false);
+                mMap.getUiSettings().setRotateGesturesEnabled(false);
             }
         }
     }
@@ -144,6 +148,8 @@ public class MapsActivity extends FragmentActivity implements LocationListener{
                         String name = properties.getString("Name");
                         String latest_measurement = properties.getString("Latest measurement");
                         double dose = properties.getDouble("Latest dose (&microSv/hr)");
+
+                        Log.i("NAME ", name);
 
                         /*jsonResponse = "";
                         jsonResponse += "Name: " + name + "\n\n";
