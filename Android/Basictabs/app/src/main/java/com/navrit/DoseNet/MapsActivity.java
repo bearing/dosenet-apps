@@ -10,7 +10,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,7 +36,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import im.delight.android.location.SimpleLocation;
 import im.delight.android.location.SimpleLocation.Point;
 
-public class MapsActivity extends FragmentActivity implements LocationListener{
+public class MapsActivity extends FragmentActivity implements LocationListener, AdapterViewCompat.OnItemSelectedListener {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////// Global variables /////////////////////////////////////////
@@ -63,6 +67,15 @@ public class MapsActivity extends FragmentActivity implements LocationListener{
         userLocation = getLocation();
 
         getParsePlotJSON(); //Main program logic
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.planets_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
     }
 
     @Override
@@ -273,5 +286,16 @@ public class MapsActivity extends FragmentActivity implements LocationListener{
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    @Override
+    public void onItemSelected(AdapterViewCompat<?> parent, View view, int position, long id) {
+        // An item was selected. You can retrieve the selected item using
+        parent.getItemAtPosition(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterViewCompat<?> parent) {
+        // Another interface callback
     }
 }
