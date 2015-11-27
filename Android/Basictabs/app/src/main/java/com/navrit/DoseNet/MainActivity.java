@@ -48,13 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         BarData data = new BarData(labels, dataset);
         chart.setData(data);
-
         chart.setDescription("");
-
         dataset.setColors(ColorTemplate.JOYFUL_COLORS);
-
         chart.animateY(1000);
-
     }
 
     public void switchToMaps(View view)
@@ -66,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
