@@ -183,11 +183,19 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
                         //mClusterManager.addItem(new Dosimeter(latitude, longitude, name, radiation_info));
                         //Log.i("JSON", jsonResponse);
                     }
-                    Log.i("DOSIMETR nearest", closestDosimeterName);
-                    Toast.makeText(getApplicationContext(),
-                            ("Nearest dosimeter (of " + String.valueOf(station_array.length())
-                                    + "): " + closestDosimeterName),
-                            Toast.LENGTH_LONG).show();
+                    if (station_array.length() > 0){
+                        Log.i("DOSIMETR nearest", closestDosimeterName);
+                        Toast.makeText(getApplicationContext(),
+                                ("Nearest dosimeter (of " + String.valueOf(station_array.length())
+                                        + "): " + closestDosimeterName),
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        Log.w("DOSIMETR", ">> No dosimeters in geoJSON, RadWatch tucked up server side");
+                        Toast.makeText(getApplicationContext(),
+                                ("Server error - no dosimteters found. Try again later"),
+                                Toast.LENGTH_LONG).show();
+                    }
+
                     // Centres on nearest dosimeter, non animated transition
                     setUpMap(new LatLng(closest.latitude, closest.longitude), 9);
 
