@@ -237,6 +237,8 @@
 		77B34D5A1B64A4F800010809 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = navrit;
 				TargetAttributes = {
