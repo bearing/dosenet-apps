@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '7C7233AB78A97DD998382C8E'
-               BlueprintName = 'Pods-DoseNet'
+               BlueprintIdentifier = '213BD400281EADB433BE292E'
+               BlueprintName = 'JLToast'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'Pods_DoseNet.framework'>
+               BuildableName = 'JLToast.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

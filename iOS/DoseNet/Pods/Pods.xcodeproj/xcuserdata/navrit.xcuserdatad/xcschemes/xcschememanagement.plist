@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>JLToast.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-DoseNet.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>06E464F84BA95647B1397CDA10173FC4</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>345F7255E1502E31197387EFC10B10F3</key>
+		<key>12E71F642482A47D8AB90032B0535BE3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>432ECC54282C84882B482CCB4CF227FC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>740662429B7B7F830591F2EE3ABDC36A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>892FE5BFDD0FD8B38E22D76135459FE4</key>
 		<dict>
 			<key>primary</key>
 			<true/>

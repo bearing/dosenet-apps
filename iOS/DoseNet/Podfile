@@ -3,7 +3,8 @@ platform :ios, '8.0'
 use_frameworks!
 
 target 'DoseNet' do
-    pod 'SwiftSpinner'
+    pod 'SwiftSpinner', '~> 0.8'
     pod 'Alamofire', '~> 3.0'
+    pod 'JLToast', '~> 1.3'
 end
 
