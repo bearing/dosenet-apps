@@ -21,7 +21,7 @@ var userLoc:CLLocationCoordinate2D!
 
 class MapViewController: UIViewController, CLLocationManagerDelegate {
     
-    @IBOutlet weak var map: MKMapView!
+    @IBOutlet weak var mapView: MKMapView!
     let locationManager = CLLocationManager()
     
     func main(){
@@ -43,9 +43,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 if let value = response.result.value {
                     let features:JSON = JSON(value)["features"]
                     var lastDistance = CLLocationDistance(20037500)
-                    
-                    self.map.rotateEnabled = false
-                    self.map.pitchEnabled = false
                     
                     numberOfDosimeters = features.count
                     JLToast.makeText("\(numberOfDosimeters) Dosimeters are available", duration: JLToastDelay.LongDelay).show()
@@ -69,7 +66,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                         annotation.title = name.string
                         annotation.coordinate = pinLocation
                         annotation.subtitle = subtitle
-                        self.map.addAnnotation(annotation)
+                        self.mapView.addAnnotation(annotation)
                         
                         let fromLoc = CLLocation(latitude: CLlat, longitude: CLlon)
                         let toLoc = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
@@ -128,8 +125,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         let mapSpan = MKCoordinateSpanMake(10, 10)
         let mapRegion = MKCoordinateRegionMake(centerLocation, mapSpan)
         
-        map.setRegion(mapRegion, animated: true)
-        map.showsUserLocation = true
+        mapView.rotateEnabled = false
+        mapView.pitchEnabled = false
+        mapView.setRegion(mapRegion, animated: true)
+        mapView.showsUserLocation = true
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

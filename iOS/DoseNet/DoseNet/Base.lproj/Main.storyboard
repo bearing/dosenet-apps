@@ -74,7 +74,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" id="cPa-gy-q4n"/>
                     <connections>
-                        <outlet property="map" destination="4Z1-XX-s9n" id="xmi-Rg-5xu"/>
+                        <outlet property="mapView" destination="4Z1-XX-s9n" id="eob-Vz-38G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
