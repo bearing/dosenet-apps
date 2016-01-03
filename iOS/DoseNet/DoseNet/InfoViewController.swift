@@ -15,7 +15,7 @@ class InfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let url = NSURL (string: "https://radwatch.berkeley.edu/dosenet");
+        let url = NSURL (string: "https://radwatch.berkeley.edu/dosenet/about");
         let requestObj = NSURLRequest(URL: url!);
         webView.loadRequest(requestObj);
     }
