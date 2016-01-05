@@ -8,17 +8,19 @@
 
 import UIKit
 
-class DosimeterViewController: UIViewController {
-
+class DosimeterViewController: UITableViewController {
+    
+    var items: [String] = ["We", "Heart", "Swift"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 
 }
 

@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Charts.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JLToast.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,7 +32,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>12E71F642482A47D8AB90032B0535BE3</key>
+		<key>24090FBCEF7A50AE384678B5C071804B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -37,12 +42,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>740662429B7B7F830591F2EE3ABDC36A</key>
+		<key>6055D3351D7375AEFE0B3ED15DFCEFF2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>892FE5BFDD0FD8B38E22D76135459FE4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F757DDD3BC315CE0E0AB071327A6F3DF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
