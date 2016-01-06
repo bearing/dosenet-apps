@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		772B7A341C3D53080021D677 /* Dosimeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7744C4411C3D4F2200E1F338 /* Dosimeter.swift */; };
+		772EE8E81C3DB014007EEA96 /* DosimeterGraphsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772EE8E71C3DB014007EEA96 /* DosimeterGraphsViewController.swift */; };
 		778606C51C348AC6002D94EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778606C41C348AC6002D94EB /* AppDelegate.swift */; };
 		778606C71C348AC6002D94EB /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778606C61C348AC6002D94EB /* InfoViewController.swift */; };
 		778606C91C348AC6002D94EB /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778606C81C348AC6002D94EB /* MapViewController.swift */; };
@@ -36,6 +37,7 @@
 		0A476CE422C5128B51CCB8FA /* Pods-DoseNet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoseNet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DoseNet/Pods-DoseNet.debug.xcconfig"; sourceTree = "<group>"; };
 		2AE5CC0BDD23D1E4A2279456 /* Pods-DoseNet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoseNet.release.xcconfig"; path = "Pods/Target Support Files/Pods-DoseNet/Pods-DoseNet.release.xcconfig"; sourceTree = "<group>"; };
 		5B2A48807C4CFD9C729B17A9 /* Pods_DoseNet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DoseNet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		772EE8E71C3DB014007EEA96 /* DosimeterGraphsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DosimeterGraphsViewController.swift; sourceTree = "<group>"; };
 		7744C4411C3D4F2200E1F338 /* Dosimeter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dosimeter.swift; sourceTree = "<group>"; };
 		778606C11C348AC6002D94EB /* DoseNet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoseNet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		778606C41C348AC6002D94EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				778606C81C348AC6002D94EB /* MapViewController.swift */,
 				778606C61C348AC6002D94EB /* InfoViewController.swift */,
 				778606CA1C348AC6002D94EB /* Main.storyboard */,
+				772EE8E71C3DB014007EEA96 /* DosimeterGraphsViewController.swift */,
 				778606CD1C348AC6002D94EB /* Assets.xcassets */,
 				778606CF1C348AC6002D94EB /* LaunchScreen.storyboard */,
 				778606D21C348AC6002D94EB /* Info.plist */,
@@ -240,6 +243,7 @@
 				778606C51C348AC6002D94EB /* AppDelegate.swift in Sources */,
 				772B7A341C3D53080021D677 /* Dosimeter.swift in Sources */,
 				778606F31C34A969002D94EB /* DosimeterViewController.swift in Sources */,
+				772EE8E81C3DB014007EEA96 /* DosimeterGraphsViewController.swift in Sources */,
 				77D3C9831C34AF73004F400A /* SwiftyJSON.swift in Sources */,
 				778606C71C348AC6002D94EB /* InfoViewController.swift in Sources */,
 			);

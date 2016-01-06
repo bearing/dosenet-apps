@@ -24,6 +24,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SwiftCSV.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>SwiftSpinner.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,7 +47,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6055D3351D7375AEFE0B3ED15DFCEFF2</key>
+		<key>525B530E526E4CDEB1AB6219A9DEBA5E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -52,7 +57,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F757DDD3BC315CE0E0AB071327A6F3DF</key>
+		<key>A56AA9752364840F19C239519421E8FD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C7E144C0B552B3ACB9E44609DD796CF3</key>
 		<dict>
 			<key>primary</key>
 			<true/>

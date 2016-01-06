@@ -36,6 +36,10 @@ func randomAlphaNumericString(length: Int) -> String {
 
 class DosimeterViewController: UITableViewController, CLLocationManagerDelegate {
     
+    @IBAction func cancelToDosimeterViewController(segue: UIStoryboardSegue){
+        
+    }
+    
     var items = [String]()
     var itemsDistances = [Double]()
     var newitem: String = ""
@@ -146,8 +150,12 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
     override func tableView(tableView: UITableView,
         cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // 3
-        let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath)
-        if let titleLabel = cell.viewWithTag(100) as? UILabel { //4
+        let cell = tableView.dequeueReusableCellWithIdentifier("DosimeterCell", forIndexPath: indexPath) as! DosimeterCell
+        
+        let dosimeter = dosimeters[indexPath.row] as Dosimeter
+        cell.dosimeter = dosimeter
+            
+        /*if let titleLabel = cell.viewWithTag(100) as? UILabel { //4
             titleLabel.text = dosimeters[indexPath.row].name
         }
         
@@ -155,7 +163,7 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
             let km = dosimeters[indexPath.row].distance
             let detailText = String(format:"%.0f", km!*0.621371) + " mi / " + String(format:"%.0f", km!) + " km"
             subtitleLabel.text = detailText
-        }
+        }*/
         
         return cell
     }
@@ -173,3 +181,17 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
 
 }
 
+class DosimeterCell: UITableViewCell { //http://www.raywenderlich.com/113388/storyboards-tutorial-in-ios-9-part-1
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    
+    var dosimeter : Dosimeter! {
+        didSet {
+            let km = dosimeter.distance
+            let detailText = String(format:"%.0f", km!*0.621371) + " mi / " + String(format:"%.0f", km!) + " km"
+            titleLabel.text = dosimeter.name
+            subtitleLabel.text = detailText
+        }
+    }
+}
