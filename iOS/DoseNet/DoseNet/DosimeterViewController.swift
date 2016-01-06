@@ -147,12 +147,16 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
         cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // 3
         let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath)
-        cell.textLabel!.text = dosimeters[indexPath.row].name
+        if let titleLabel = cell.viewWithTag(100) as? UILabel { //4
+            titleLabel.text = dosimeters[indexPath.row].name
+        }
         
-        let km = dosimeters[indexPath.row].distance
-        let detailText = String(format:"%.0f", km!*0.621371) + " mi / " + String(format:"%.0f", km!) + " km"
-        cell.detailTextLabel!.text = detailText
-            
+        if let subtitleLabel = cell.viewWithTag(101) as? UILabel { //5
+            let km = dosimeters[indexPath.row].distance
+            let detailText = String(format:"%.0f", km!*0.621371) + " mi / " + String(format:"%.0f", km!) + " km"
+            subtitleLabel.text = detailText
+        }
+        
         return cell
     }
     
