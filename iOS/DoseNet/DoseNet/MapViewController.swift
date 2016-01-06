@@ -13,22 +13,18 @@ import SwiftSpinner
 import JLToast
 import CoreLocation
 
-let url:String! = "https://radwatch.berkeley.edu/sites/default/files/output.geojson"
 let unit:String! = " µSv/hr"
 var closestDosimeter:String! = ""
-var numberOfDosimeters:Int! = 0
-var userLoc:CLLocationCoordinate2D!
 
-class MapViewController: UIViewController, CLLocationManagerDelegate {
+class MapViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
     let locationManager = CLLocationManager()
     
     func main(){
-        initCLLocationManager()
         initToast()
         SwiftSpinner.show("Loading...", animated: true)
-        
+        mapSetup()
         networkRequest()
     }
     
@@ -44,7 +40,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                     let features:JSON = JSON(value)["features"]
                     var lastDistance = CLLocationDistance(20037500)
                     
-                    numberOfDosimeters = features.count
                     JLToast.makeText("\(numberOfDosimeters) Dosimeters are available", duration: JLToastDelay.LongDelay).show()
                     
                     for var i=0; i < numberOfDosimeters; ++i {
@@ -106,20 +101,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         )
     }
     
-    func initCLLocationManager(){
-        // Ask for Authorisation from the User.
-        self.locationManager.requestAlwaysAuthorization()
-        
-        // For use in foreground
-        self.locationManager.requestWhenInUseAuthorization()
-        
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
-        }
-    }
-    
     func mapSetup(){
         let centerLocation = CLLocationCoordinate2DMake(userLoc.latitude, userLoc.longitude)
         let mapSpan = MKCoordinateSpanMake(10, 10)
@@ -131,17 +112,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         mapView.showsUserLocation = true
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        userLoc = manager.location!.coordinate
-        //print("locations = \(userLoc.latitude) \(userLoc.longitude)")
-        locationManager.stopUpdatingLocation()
-        
-        mapSetup()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         main()
     }
     
