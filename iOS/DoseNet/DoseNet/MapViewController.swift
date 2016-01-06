@@ -14,6 +14,7 @@ import JLToast
 import CoreLocation
 
 let unit:String! = " µSv/hr"
+let timeZone:String! = " PT"
 var closestDosimeter:String! = ""
 
 class MapViewController: UIViewController {
@@ -42,19 +43,18 @@ class MapViewController: UIViewController {
                     
                     JLToast.makeText("\(numberOfDosimeters) Dosimeters are available", duration: JLToastDelay.LongDelay).show()
                     
-                    for var i=0; i < numberOfDosimeters; ++i {
+                    for i in 0..<numberOfDosimeters {
                         let this:JSON = features[i]
                         let prop:JSON = this["properties"]
                         let name:JSON = prop["Name"]
                         let dose:JSON = prop["Latest dose (&microSv/hr)"]
                         let doseString:String = String(format:"%.3f",dose.double!)
                         let time:JSON = prop["Latest measurement"]
-                        let timeString:String = time.string!
+                        let timeString:String = time.string! + timeZone
                         let subtitle = doseString + unit + " @ " + timeString
-                        let lon = this["geometry"]["coordinates"][0]
-                        let lat = this["geometry"]["coordinates"][1]
-                        let CLlon = CLLocationDegrees(lon.double!)
-                        let CLlat = CLLocationDegrees(lat.double!)
+
+                        let CLlon = CLLocationDegrees(this["geometry"]["coordinates"][0].double!)
+                        let CLlat = CLLocationDegrees(this["geometry"]["coordinates"][1].double!)
                         let pinLocation = CLLocationCoordinate2DMake(CLlat,CLlon)
                         let annotation = MKPointAnnotation()
                         
@@ -72,8 +72,7 @@ class MapViewController: UIViewController {
                         }
                     }
                     JLToast.makeText("\(closestDosimeter) is your closest dosimeter", duration: JLToastDelay.LongDelay).show()
-                    let tabItem = self.tabBarController?.tabBar.items![1]
-                    tabItem!.badgeValue = String(numberOfDosimeters)
+
                 }
                 
             case .Failure(let error):
