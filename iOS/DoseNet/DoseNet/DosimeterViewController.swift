@@ -12,9 +12,11 @@ import SwiftSpinner
 import JLToast
 import CoreLocation
 
-let url:String! = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?" + randomAlphaNumericString(10)
+let url:String! = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?"
+    + randomAlphaNumericString(32)
 var userLoc:CLLocationCoordinate2D!
 var numberOfDosimeters:Int! = 0
+var dosimeters : [Dosimeter] = []
 
 func randomAlphaNumericString(length: Int) -> String {
     
@@ -36,25 +38,12 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
     
     var items = [String]()
     var itemsDistances = [Double]()
-    
-    /*
-    https://stackoverflow.com/questions/30446812/sort-swift-array-of-dictionaries-by-value-of-a-key
-    var myArray = Array<AnyObject>()
-    var dict = Dictionary<String, AnyObject>()
-    
-    myArray.sort{
-    (($0 as! Dictionary<String, AnyObject>)["i"] as? Int) < (($1 as! Dictionary<String, AnyObject>)["i"] as? Int)
-    }
-    */
-    
-    
     var newitem: String = ""
     let locationManager = CLLocationManager()
     
     func main() {
-        print(url)
-        initCLLocationManager()
         SwiftSpinner.show("Loading...", animated: true)
+        initCLLocationManager()
         networkRequest()
     }
     
@@ -63,7 +52,6 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
             switch response.result {
                 
             case .Success:
-                SwiftSpinner.hide()
                 
                 if let value = response.result.value {
                     let features:JSON = JSON(value)["features"]
@@ -71,32 +59,44 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
                     
                     numberOfDosimeters = features.count
                     
-                    for var i=0; i < numberOfDosimeters; ++i {
+                    for i in 0..<numberOfDosimeters {
                         let this:JSON = features[i]
                         let prop:JSON = this["properties"]
                         let name:JSON = prop["Name"]
+                        let dose_uSv:JSON = prop["Latest dose (&microSv/hr)"]
+                        let dose_mRem:JSON = prop["Latest dose (mREM/hr)"]
+                        let time:JSON = prop["Latest measurement"]
+                        
                         let lon = this["geometry"]["coordinates"][0]
                         let lat = this["geometry"]["coordinates"][1]
                         let CLlon = CLLocationDegrees(lon.double!)
                         let CLlat = CLLocationDegrees(lat.double!)
                         
                         let fromLoc = CLLocation(latitude: CLlat, longitude: CLlon)
-                        let toLoc = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
+                        let toLoc = CLLocation(latitude: userLoc.latitude,
+                            longitude: userLoc.longitude)
                         let distance = fromLoc.distanceFromLocation(toLoc)
                         if (distance < lastDistance) {
                             lastDistance = distance
                             closestDosimeter = name.string
                         }
                         
-                        self.items.append(name.string!)
-                        self.itemsDistances.append(distance/1000)
+                        let d = Dosimeter(name: name.string!,
+                            lastDose_uSv: dose_uSv.double!,
+                            lastDose_mRem: dose_mRem.double!,
+                            lastTime: time.string!,
+                            distance: (distance/1000))                          // m --> km
+                        dosimeters.append(d)
                     }
                     let tabItem = self.tabBarController?.tabBar.items![1]
                     tabItem!.badgeValue = String(numberOfDosimeters)
                     
+                    dosimeters.sortInPlace({ $0.distance < $1.distance })
                     dispatch_async(dispatch_get_main_queue()) {
                         self.tableView.reloadData()
                     }
+                    
+                    SwiftSpinner.hide()
                 }
                 
             case .Failure(let error):
@@ -119,15 +119,16 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
             locationManager.startUpdatingLocation()
         }
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(manager: CLLocationManager,
+            didUpdateLocations locations: [CLLocation]) {
         userLoc = manager.location!.coordinate
         //print("locations = \(userLoc.latitude) \(userLoc.longitude)")
-        locationManager.stopUpdatingLocation()
+        //locationManager.stopUpdatingLocation()
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -135,20 +136,23 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView,
+        numberOfRowsInSection section: Int) -> Int {
         // 2
-        return self.items.count
+        return dosimeters.count
     }
     
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView,
+        cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         // 3
         let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath)
-        cell.textLabel!.text = self.items[indexPath.row]
-        var detailText : String
-        let km = self.itemsDistances[indexPath.row]
-        detailText = String(format:"%.0f", Double(km)*0.621371) + " mi / " + String(format:"%.0f", km) + " km"
+        cell.textLabel!.text = dosimeters[indexPath.row].name
+        
+        let km = dosimeters[indexPath.row].distance
+        let detailText = String(format:"%.0f", km!*0.621371) + " mi / " + String(format:"%.0f", km!) + " km"
         cell.detailTextLabel!.text = detailText
+            
         return cell
     }
     
