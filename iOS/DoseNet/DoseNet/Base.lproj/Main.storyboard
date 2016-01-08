@@ -38,7 +38,7 @@
                                 <rect key="frame" x="0.0" y="92" width="600" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b2S-Ta-Jtb" id="h6t-jM-5b2">
-                                    <rect key="frame" x="0.0" y="0.0" width="567" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="59.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="p0e-oz-Dmo">
@@ -47,7 +47,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hEH-yF-t0h">
                                                     <rect key="frame" x="0.0" y="0.0" width="511" height="27"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="25k-bV-sHF">
@@ -101,7 +101,19 @@
                     <view key="view" contentMode="scaleToFill" id="ghv-zh-2yE">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="apc-xJ-VV3" customClass="LineChartView" customModule="Charts">
+                                <rect key="frame" x="10" y="80" width="577" height="512"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="apc-xJ-VV3" firstAttribute="top" secondItem="Qrs-th-WKn" secondAttribute="bottom" constant="16" id="Cfs-QJ-OGk"/>
+                            <constraint firstAttribute="trailing" secondItem="apc-xJ-VV3" secondAttribute="trailing" constant="13" id="J5z-Vg-Kir"/>
+                            <constraint firstItem="Kap-5U-wGv" firstAttribute="top" secondItem="apc-xJ-VV3" secondAttribute="bottom" constant="8" id="TbN-jt-kTM"/>
+                            <constraint firstItem="apc-xJ-VV3" firstAttribute="leading" secondItem="ghv-zh-2yE" secondAttribute="leading" constant="10" id="taJ-Rz-9p7"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="wCS-5c-96m">
                         <barButtonItem key="backBarButtonItem" title="Back" id="XwZ-yt-kk2"/>
@@ -121,6 +133,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="lineChartView" destination="apc-xJ-VV3" id="Ipn-dV-apo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vZE-yL-LEC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="oTD-2W-JUh" userLabel="Exit" sceneMemberID="exit"/>

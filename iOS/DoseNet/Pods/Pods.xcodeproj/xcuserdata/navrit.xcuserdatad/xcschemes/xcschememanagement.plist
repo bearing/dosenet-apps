@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>CSwiftV.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Charts.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -20,11 +25,6 @@
 			<false/>
 		</dict>
 		<key>Pods-DoseNet.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>SwiftCSV.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -47,22 +47,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>525B530E526E4CDEB1AB6219A9DEBA5E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>892FE5BFDD0FD8B38E22D76135459FE4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A56AA9752364840F19C239519421E8FD</key>
+		<key>A97BEC5DF70C1185CCEC73D2A6D1754D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C7E144C0B552B3ACB9E44609DD796CF3</key>
+		<key>C65BAB7F69B5796E29E0FBF91851225A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C9289771C9E400167D4D291E44982A06</key>
 		<dict>
 			<key>primary</key>
 			<true/>
