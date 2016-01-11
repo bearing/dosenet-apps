@@ -36,9 +36,7 @@ func randomAlphaNumericString(length: Int) -> String {
 
 class DosimeterViewController: UITableViewController, CLLocationManagerDelegate {
     
-    @IBAction func cancelToDosimeterViewController(segue: UIStoryboardSegue){
-        
-    }
+    @IBAction func cancelToDosimeterViewController(segue: UIStoryboardSegue){}
     
     var items = [String]()
     var itemsDistances = [Double]()
@@ -48,7 +46,6 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
     func main() {
         SwiftSpinner.show("Loading...", animated: true)
         initCLLocationManager()
-        networkRequest()
     }
     
     func networkRequest() {
@@ -128,11 +125,11 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
         }
     }
     
-    func locationManager(manager: CLLocationManager,
-            didUpdateLocations locations: [CLLocation]) {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         userLoc = manager.location!.coordinate
-        //print("locations = \(userLoc.latitude) \(userLoc.longitude)")
-        //locationManager.stopUpdatingLocation()
+        print("locations = \(userLoc.latitude) \(userLoc.longitude)")
+        networkRequest()
+        locationManager.stopUpdatingLocation()
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
