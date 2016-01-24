@@ -125,6 +125,9 @@
                                     <segment title="µSv/hr"/>
                                     <segment title="mRem/hr"/>
                                 </segments>
+                                <connections>
+                                    <action selector="unitChanged:" destination="Aoi-us-Dje" eventType="valueChanged" id="Mp4-HW-Hvg"/>
+                                </connections>
                             </segmentedControl>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="lGr-Va-vnt">
@@ -135,6 +138,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="lineChartView" destination="apc-xJ-VV3" id="Ipn-dV-apo"/>
+                        <outlet property="segmentedControl_Unit" destination="8Nx-Bc-q4U" id="gzS-8o-CaG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vZE-yL-LEC" userLabel="First Responder" sceneMemberID="firstResponder"/>

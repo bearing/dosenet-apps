@@ -16,6 +16,17 @@ let CPMtoUSV:Double = 0.036
 class DosimeterGraphsViewController: UIViewController {
     @IBOutlet weak var labelLeadingMarginConstraint: NSLayoutConstraint!
     @IBOutlet weak var lineChartView: LineChartView!
+    @IBOutlet weak var segmentedControl_Unit: UISegmentedControl!
+    @IBAction func unitChanged(sender : UISegmentedControl) {
+        switch segmentedControl_Unit.selectedSegmentIndex {
+        case 0:
+            print("First selected")
+        case 1:
+            print("Second Segment selected")
+        default:
+            break; 
+        }
+    }
 
     private var labelLeadingMarginInitialConstant: CGFloat!
 
