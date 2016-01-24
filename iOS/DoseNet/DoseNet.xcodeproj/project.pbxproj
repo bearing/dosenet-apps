@@ -92,11 +92,11 @@
 		778606C31C348AC6002D94EB /* DoseNet */ = {
 			isa = PBXGroup;
 			children = (
+				778606CA1C348AC6002D94EB /* Main.storyboard */,
 				7744C4411C3D4F2200E1F338 /* Dosimeter.swift */,
 				778606F21C34A969002D94EB /* DosimeterViewController.swift */,
 				778606C81C348AC6002D94EB /* MapViewController.swift */,
 				778606C61C348AC6002D94EB /* InfoViewController.swift */,
-				778606CA1C348AC6002D94EB /* Main.storyboard */,
 				772EE8E71C3DB014007EEA96 /* DosimeterGraphsViewController.swift */,
 				778606CD1C348AC6002D94EB /* Assets.xcassets */,
 				778606CF1C348AC6002D94EB /* LaunchScreen.storyboard */,

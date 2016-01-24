@@ -14,7 +14,7 @@ import JLToast
 import CoreLocation
 
 let unit:String! = " µSv/hr"
-let timeZone:String! = " (Local)"
+let timeZone:String! = "" //" (Local)"
 var closestDosimeter:String! = ""
 
 class MapViewController: UIViewController {

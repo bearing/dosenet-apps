@@ -26,22 +26,30 @@ class DosimeterGraphsViewController: UIViewController {
     struct csvStruct {
         var times: [NSDate]
         var doses: [Double]
-        var doseErrors: [Double]
 
         func length() -> Int {
-            return times.count
+            return doses.count
         }
         
+        /*subscript(start: Int, end: Int) -> csvStruct {
+            get {
+                return csvStruct(times: Array(times[start...end]), doses: Array(doses[start...end]))
+            }
+        }*/
+        subscript(range : Range<Int>) -> csvStruct {
+            get {
+                return csvStruct(times: Array(times[range.startIndex..<range.endIndex]), doses: Array(doses[range.startIndex..<range.endIndex]))
+            }
+        }
         subscript(index: Int) -> csvStruct {
             get {
-                return csvStruct(times: [times[index]], doses: [doses[index]], doseErrors: [doseErrors[index]])
+                return csvStruct(times: [times[index]], doses: [doses[index]])
             }
         }
         
-        init(times: [NSDate], doses: [Double], doseErrors: [Double]) {
+        init(times: [NSDate], doses: [Double]) {
             self.times = times
             self.doses = doses
-            self.doseErrors = doseErrors
         }
 
     }
@@ -52,7 +60,7 @@ class DosimeterGraphsViewController: UIViewController {
 
     func getData() {
         var url = "https://radwatch.berkeley.edu/sites/default/files/dosenet/"
-        url += "etch.csv"
+        url += "campolindo.csv"
         //url += self.getShortName()
 
         Alamofire.request(.GET, url).responseString { response in
@@ -61,10 +69,8 @@ class DosimeterGraphsViewController: UIViewController {
                 print("SUCCESS")
                 if let value = response.result.value {
                     let allData = self.csvParse( CSwiftV(String: value) )
-                    self.data = allData.csvStruct
-                    self.data = self.reduceData(
-                            self.data, sampleSize: allData.sampleSize, scaleFactor: allData.scaleFactor )
-                    self.updatePlot(self.data)
+                    let reducedData = self.reduceData( allData.csvStruct, sampleSize: allData.sampleSize, scaleFactor: allData.scaleFactor )
+                    self.updatePlot( reducedData )
                 }
             case .Failure(let error):
                 print(error)
@@ -101,28 +107,40 @@ class DosimeterGraphsViewController: UIViewController {
         let rows = csv.rows
         var times:[NSDate]! = []
         var doses:[Double]! = []
-        var doseErrors:[Double]! = []
         
         var sampleSize:Int = 1
         var scaleFactor:Double = 1
         
-        for row in rows {
-            times.append(stringToDate(row[0]))
-            doses.append(Double(row[1])!)
-            doseErrors.append(Double(row[2])!)
+        switch(dose_unit) { // Scale dose relative to CPM
+        case "CPM":
+            scaleFactor = 1
+        case "USV":
+            scaleFactor = CPMtoUSV
+        case "REM":
+            scaleFactor = CPMtoUSV/10
+        case "cigarette":
+            scaleFactor = CPMtoUSV*0.00833333335
+        case "medical":
+            scaleFactor = CPMtoUSV*0.2
+        case "plane":
+            scaleFactor = CPMtoUSV*0.420168067
+        default:
+            scaleFactor = CPMtoUSV
+            print("Defaulting on µSv/hr")
         }
         
-        let output = csvStruct(times:times, doses:doses, doseErrors:doseErrors)
+        for row in rows {
+            times.append(stringToDate(row[0]))
+            doses.append(Double(row[1])!*scaleFactor)
+        }
+        
+        let output = csvStruct(times:times, doses:doses)
         var numEntries:Int = output.length()
         
         let newestData:(csvStruct) = output[output.length()-2]
         let oldestData:(csvStruct) = output[0]
         var endDate:NSDate! = newestData.times[0]
         let startDate:NSDate! = oldestData.times[0]
-
-        /*print(times[0...5])
-        print(doses[0...5])
-        print(doseErrors[0...5])*/
 
         switch(time_unit) { // Time clipping
         case "Hour":
@@ -151,57 +169,76 @@ class DosimeterGraphsViewController: UIViewController {
         default: // "Hour"
             endDate = endDate.dateByAddingTimeInterval(-1*3600)
             numEntries = min(numEntries, 13) // 12 5 minute intervals in last hour
+            print("Defaulting on Hour")
+        }
+        print("Time selected: \(time_unit)")
+        
+        var reducedOutput:csvStruct
+        var reducedDoses:[Double] = []
+        var reducedTimes:[NSDate] = []
+        
+        for i in (output.length() - numEntries)..<(output.length()) {
+            if (output.times[i] < endDate) { break }
+            reducedDoses.append(output.doses[i])
+            reducedTimes.append(output.times[i])
         }
         
-        switch(dose_unit) { // Scale dose relative to CPM
-        case "CPM":
-            scaleFactor = 1
-        case "USV":
-            scaleFactor = CPMtoUSV
-        case "REM":
-            scaleFactor = CPMtoUSV/10
-        case "cigarette":
-            scaleFactor = CPMtoUSV*0.00833333335
-        case "medical":
-            scaleFactor = CPMtoUSV*0.2
-        case "plane":
-            scaleFactor = CPMtoUSV*0.420168067
-        }
+        reducedOutput = csvStruct(times: reducedTimes, doses: reducedDoses)
+        //print(reducedOutput.doses[0...2])
 
-        return (output, sampleSize, scaleFactor)
+        return (reducedOutput, sampleSize, scaleFactor)
     }
 
     func reduceData( data : csvStruct, sampleSize : Int, scaleFactor: Double) -> csvStruct {
-        var averagedData = []
-        let tmp:Int = Int(data.length()/sampleSize)
-        for n in 0..<tmp {
-            let sub_data = data.slice(n*sampleSize, (n+1)*sampleSize) //Sub-sample
-            var average = 0
-            print(sub_data.count)
-            for i in 0..<sub_data.count {
-                var this_data = sub_data[i];
-                average += this_data[1]*5; // total counts was already averaged over 5 minute interval
+        var times:[NSDate]! = []
+        var doses:[Double]! = []
+        var doseErrors:[Double]! = []
+        let groups = Int(floor(Double(data.length()/sampleSize)))
+        var n:Int = 0
+        
+        print(data.doses[0...2])
+        
+        print("Original length: \(data.length())")
+        print("Upper index: \(groups)")
+        print("Sample size: \(sampleSize)")
+        //print(data[0])
+        //print(data[data.length()-1])
+        
+        while n < groups-1 {
+            n += 1
+            let subData:(csvStruct) = data[(n*sampleSize)...((n+1)*sampleSize)] // Sub-sample with manually implemented struct
+            
+            var average:Double = 0
+            for i in 0..<subData.length() {
+                // this_data = sub_data[i]
+                average += subData.doses[i]*5 // total counts was already averaged over 5 minute interval
             }
-            error = Math.sqrt(average)/sub_data.length/5;
-            average = average/sub_data.length/5;
-            var d = round(sub_data.length/2);
-            print(d)
-            var mid_data = sub_data[d];
-            var date = mid_data[0];
-            averaged_data.push([date,[average*scale,error*scale]]);
+            let t = Double(subData.length())/5
+            let error:Double = sqrt(average)/t
+            average = average/t
+            let d = Int(round(Double(subData.length()/2)))
+            let midDate = subData.times[d] //subDates[d]
+            
+            times.append(midDate)
+            doses.append(average*scaleFactor)
+            doseErrors.append(error*scaleFactor)
         }
-
-
-        return data
+        
+        let out = csvStruct(times:times, doses:doses)
+        /*print("Reduced length: \(out.length())")
+        print(out[0...2].doses)*/
+        
+        return out
     }
 
     func updatePlot( data : csvStruct) {
-        /*print(data.times[0...5])
-        print(data.dose[0...5])
-        print(data.doseError[0...5])*/
+        //print(data.times[0...5])
+        //print(data.doses[0...2])
 
         lineChartView.noDataText = "Error: No data received"
         lineChartView.descriptionText = "Radiation levels over time"
+        lineChartView.xAxis.labelPosition = .Top
+        lineChartView.animate(xAxisDuration: 2, easingOption: ChartEasingOption.EaseInOutSine)
 
         var dataEntries: [ChartDataEntry] = []
 
@@ -212,10 +249,20 @@ class DosimeterGraphsViewController: UIViewController {
 
         let chartDataSet = LineChartDataSet(yVals:dataEntries, label:dose_unit)
         chartDataSet.colors = ChartColorTemplates.liberty()
-        let chartData = LineChartData(xVals: data.doses, dataSet: chartDataSet)
-        lineChartView.data = chartData
-    }
+        chartDataSet.drawFilledEnabled = true
+        chartDataSet.drawHorizontalHighlightIndicatorEnabled = false
+        chartDataSet.drawCirclesEnabled = false
+        chartDataSet.lineWidth = 0.2
 
+        let chartData = LineChartData(xVals: data.times, dataSet: chartDataSet)
+        chartData.setDrawValues(false)
+        let ll = ChartLimitLine(limit: chartData.average, label: "Average: \(NSString(format: "%.3f", chartData.average)) \(dose_unit)")
+        lineChartView.leftAxis.addLimitLine(ll)
+        lineChartView.rightAxis.enabled = false
+        lineChartView.data = chartData
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         main()
