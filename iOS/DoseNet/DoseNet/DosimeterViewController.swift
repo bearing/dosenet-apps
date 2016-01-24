@@ -17,6 +17,7 @@ let url:String! = "https://radwatch.berkeley.edu/sites/default/files/output.geoj
 var userLoc:CLLocationCoordinate2D!
 var numberOfDosimeters:Int! = 0
 var dosimeters : [Dosimeter] = []
+var selectedDosimeter:String!
 
 func randomAlphaNumericString(length: Int) -> String {
     
@@ -152,6 +153,10 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
         let dosimeter = dosimeters[indexPath.row] as Dosimeter
         cell.dosimeter = dosimeter
             
+        //let destination = DosimeterGraphsViewController()
+        //destination.performSegueWithIdentifier("graphSegue", sender: self)
+        
+            
         /*if let titleLabel = cell.viewWithTag(100) as? UILabel { //4
             titleLabel.text = dosimeters[indexPath.row].name
         }
@@ -164,6 +169,35 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
         
         return cell
     }
+    
+    // Get long name to the graph controller
+    /*
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        
+        // Create a variable that you want to send
+        var longName = dosimeters
+        
+        // Create a new variable to store the instance
+        let destinationVC = segue.destinationViewController
+        destinationVC.programVar = newProgramVar
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        // Create a variable that you want to send based on the destination view controller
+        // You can get a reference to the data by using indexPath shown below
+        let selectedProgram = programy[indexPath.row]
+        
+        // Create an instance of PlayerTableViewController and pass the variable
+        let destinationVC = PlayerTableViewController()
+        destinationVC.programVar = selectedProgram
+        
+        // Let's assume that the segue name is called playerSegue
+        // This will perform the segue and pre-load the variable for you to use
+        destinationVC.performSegueWithIdentifier("playerSegue", sender: self)
+    }
+    */
+
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -20,9 +20,15 @@ class DosimeterGraphsViewController: UIViewController {
     @IBAction func unitChanged(sender : UISegmentedControl) {
         switch segmentedControl_Unit.selectedSegmentIndex {
         case 0:
-            print("First selected")
+            print("Selected µSv/hr")
+            dose_unit = "µSv/hr"
+            chartData.removeDataSet(chartDataSet)
+            self.updatePlot( self.reducedDataUSV )
         case 1:
-            print("Second Segment selected")
+            print("Selected mRem/hr")
+            dose_unit = "mRem/hr"
+            chartData.removeDataSet(chartDataSet)
+            self.updatePlot( self.reducedDataREM )
         default:
             break; 
         }
@@ -30,9 +36,13 @@ class DosimeterGraphsViewController: UIViewController {
 
     private var labelLeadingMarginInitialConstant: CGFloat!
 
-    var data: csvStruct!
-    var dose_unit: String! = "µSv/hr"
+    var reducedDataUSV: csvStruct!
+    var reducedDataREM: csvStruct!
+    var dose_unit: String!
+    var shortDoseUnit:String! = "USV"
     var time_unit: String! = "Day"
+    var chartDataSet:LineChartDataSet!
+    var chartData:LineChartData!
 
     struct csvStruct {
         var times: [NSDate]
@@ -69,10 +79,27 @@ class DosimeterGraphsViewController: UIViewController {
         getData()
     }
 
+    func getShortName( longName:String ) -> String {
+        if longName == "Campolindo High School" {
+            return "campolindo"
+        } else if longName == "Pinewood High School" {
+            return "pinewood"
+        } else if longName == "Etcheverry Hall" {
+            return "etchhall"
+        } else if longName == "Etcheverry Hall Roof" {
+            return "etchhall_roof"
+        } else if longName == "LBL" {
+            return "lbl"
+        } else {
+            return ""
+        }
+    }
+    
     func getData() {
         var url = "https://radwatch.berkeley.edu/sites/default/files/dosenet/"
         url += "campolindo.csv"
-        //url += self.getShortName()
+        //url += (self.getShortName() + ".csv")
+        //print((self.getShortName() + ".csv"))
 
         Alamofire.request(.GET, url).responseString { response in
             switch response.result {
@@ -80,8 +107,13 @@ class DosimeterGraphsViewController: UIViewController {
                 print("SUCCESS")
                 if let value = response.result.value {
                     let allData = self.csvParse( CSwiftV(String: value) )
-                    let reducedData = self.reduceData( allData.csvStruct, sampleSize: allData.sampleSize, scaleFactor: allData.scaleFactor )
-                    self.updatePlot( reducedData )
+                    self.reducedDataUSV = self.reduceData( allData.csvStruct, sampleSize: allData.sampleSize, scaleFactor: allData.scaleFactor )
+                    self.reducedDataREM = self.reducedDataUSV
+                    for i in 0..<self.reducedDataREM.length() {
+                        self.reducedDataREM.doses[Int(i)] /= 10
+                    }
+                    self.initPlot()
+                    self.updatePlot( self.reducedDataUSV )
                 }
             case .Failure(let error):
                 print(error)
@@ -122,22 +154,28 @@ class DosimeterGraphsViewController: UIViewController {
         var sampleSize:Int = 1
         var scaleFactor:Double = 1
         
-        switch(dose_unit) { // Scale dose relative to CPM
+        switch(shortDoseUnit) { // Scale dose relative to CPM
         case "CPM":
             scaleFactor = 1
+            dose_unit = "CPM"
         case "USV":
             scaleFactor = CPMtoUSV
+            dose_unit = "µSv/hr"
         case "REM":
             scaleFactor = CPMtoUSV/10
+            dose_unit = "mRem/hr"
         case "cigarette":
             scaleFactor = CPMtoUSV*0.00833333335
+            dose_unit = "Cigarettes/hr"
         case "medical":
             scaleFactor = CPMtoUSV*0.2
+            dose_unit = "X-rays/hr"
         case "plane":
             scaleFactor = CPMtoUSV*0.420168067
+            dose_unit = "Air travel/hr"
         default:
             scaleFactor = CPMtoUSV
-            print("Defaulting on µSv/hr")
+            print("Defaulting on µSv/hr, unit: \(shortDoseUnit)")
         }
         
         for row in rows {
@@ -242,14 +280,17 @@ class DosimeterGraphsViewController: UIViewController {
         return out
     }
 
-    func updatePlot( data : csvStruct) {
+    func initPlot() {
+        lineChartView.noDataText = "Error: No data received"
+        lineChartView.descriptionText = ""
+        lineChartView.animate(xAxisDuration: 2, easingOption: ChartEasingOption.EaseInOutSine)
+        lineChartView.rightAxis.enabled = false
+        
+    }
+    
+    func updatePlot( data : csvStruct ) {
         //print(data.times[0...5])
         //print(data.doses[0...2])
-
-        lineChartView.noDataText = "Error: No data received"
-        lineChartView.descriptionText = "Radiation levels over time"
-        lineChartView.xAxis.labelPosition = .Top
-        lineChartView.animate(xAxisDuration: 2, easingOption: ChartEasingOption.EaseInOutSine)
 
         var dataEntries: [ChartDataEntry] = []
 
@@ -258,19 +299,21 @@ class DosimeterGraphsViewController: UIViewController {
             dataEntries.append(dataEntry)
         }
 
-        let chartDataSet = LineChartDataSet(yVals:dataEntries, label:dose_unit)
-        chartDataSet.colors = ChartColorTemplates.liberty()
-        chartDataSet.drawFilledEnabled = true
-        chartDataSet.drawHorizontalHighlightIndicatorEnabled = false
-        chartDataSet.drawCirclesEnabled = false
-        chartDataSet.lineWidth = 0.2
+        self.chartDataSet = LineChartDataSet(yVals:dataEntries, label:"Radiation levels over time in \(self.dose_unit)")
+        self.chartDataSet.colors = ChartColorTemplates.liberty()
+        self.chartDataSet.drawFilledEnabled = true
+        self.chartDataSet.drawHorizontalHighlightIndicatorEnabled = false
+        self.chartDataSet.drawCirclesEnabled = false
+        self.chartDataSet.lineWidth = 0.2
 
-        let chartData = LineChartData(xVals: data.times, dataSet: chartDataSet)
-        chartData.setDrawValues(false)
-        let ll = ChartLimitLine(limit: chartData.average, label: "Average: \(NSString(format: "%.3f", chartData.average)) \(dose_unit)")
+        self.chartData = LineChartData(xVals: data.times, dataSet: chartDataSet)
+        self.chartData.setDrawValues(false)
+        
+        let ll = ChartLimitLine(limit: self.chartData.average, label: "Average: \(NSString(format: "%.3f", self.chartData.average)) \(self.dose_unit)")
         lineChartView.leftAxis.addLimitLine(ll)
-        lineChartView.rightAxis.enabled = false
-        lineChartView.data = chartData
+        
+        lineChartView.data = self.chartData
+        lineChartView.notifyDataSetChanged()
         
     }
     
