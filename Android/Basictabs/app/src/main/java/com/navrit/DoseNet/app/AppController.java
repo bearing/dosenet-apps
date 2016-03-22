@@ -1,4 +1,4 @@
-package com.navrit.basictabs.app;
+package com.navrit.DoseNet.app;
 
 /**
  * Created by navrit on 12/07/15.

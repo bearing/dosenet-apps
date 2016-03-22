@@ -1,5 +1,47 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/map"
-    tools:context="com.navrit.basictabs.MapsActivity"
-    android:name="com.google.android.gms.maps.SupportMapFragment" />
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    tools:context="com.navrit.DoseNet.MapsActivity" >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+
+        <Button
+            android:id="@+id/dosimeter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dosimeters"
+
+            android:layout_marginLeft="10dp"
+            android:textColor="#e0e0e0"
+            android:backgroundTint="#039be5"
+            android:alpha="0.95" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog"
+            android:layout_toRightOf="@+id/dosimeter"
+            android:background="#e0e0e0"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:alpha="0.95" />
+
+        <Button
+            android:id="@+id/unit_switch"
+            android:layout_toRightOf="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Units"
+            android:textColor="#2979ff"
+            android:backgroundTint="#e0e0e0"
+            android:alpha="0.95" />
+
+    </RelativeLayout>
+
+</fragment>
