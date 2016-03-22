@@ -11,3 +11,10 @@ The iOS app uses the [Alamofire](https://github.com/Alamofire/Alamofire) library
 To clone this repo: `git clone --recursive https://github.com/bearing/dosenet-apps`
 
 To update Alamofire to its master branch: `git submodule update --remote`.
+
+## Android SDK
+
+Some notes from installing on OSX:
+
+- Bug: `Unable to obtain debug bridge`
+- Install `Android SDK Platform Tools` and `Android Support Library` from the SDK manager (`Tools>Android>SDK Manager`)
