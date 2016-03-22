@@ -4,13 +4,18 @@
 - Navrit Bal [@navrit](https://github.com/navrit)
 - Joseph Curtis [@jccurtis](https://github.com/jccurtis)
 
-## Alamofire
+## iOS
 
-The iOS app uses the [Alamofire](https://github.com/Alamofire/Alamofire) library for HTTP networking in Swift. In order to stay up-to-date with the Development of Alamofire, we have [submoduled](https://git-scm.com/book/en/v2/Git-Tools-Submodules) Alamofire in the iOS directory.
-
-To clone this repo: `git clone --recursive https://github.com/bearing/dosenet-apps`
-
-To update Alamofire to its master branch: `git submodule update --remote`.
+### Pre-development steps
+- `cd dosenet-apps/iOS/DoseNet`
+- `pod install`
+- Sample output:
+> Updating local specs repositories
+> Analyzing dependencies
+> Downloading dependencies
+> Using Alamofire (3.1.4)
+> ...
+> Pod installation complete! There are 5 dependencies from the Podfile and 5 total pods installed.
 
 ## Android SDK
 
