@@ -347,8 +347,9 @@ extension NSDate: Comparable { }
 
 public func stringToDate( str: String ) -> NSDate {
     let dateFormatter = NSDateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    return dateFormatter.dateFromString(str)!
+    dateFormatter.dateFormat = "yyyy-MM-DD HH:mm:ss"
+    let date = dateFormatter.dateFromString(str)
+    return date!
 }
 
 extension NSDate {
