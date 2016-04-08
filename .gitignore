@@ -2,3 +2,5 @@
 iOS/DoseNet/Pods
 
 iOS/DoseNet/DoseNet.xcodeproj/project.xcworkspace/xcuserdata/navrit.xcuserdatad/UserInterfaceState.xcuserstate
+
+*.xcuserstate
