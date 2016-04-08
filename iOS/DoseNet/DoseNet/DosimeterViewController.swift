@@ -65,8 +65,8 @@ class DosimeterViewController: UITableViewController, CLLocationManagerDelegate 
                         let this:JSON = features[i]
                         let prop:JSON = this["properties"]
                         let name:JSON = prop["Name"]
-                        let dose_uSv:JSON = prop["Latest dose (&microSv/hr)"]
-                        let dose_mRem:JSON = prop["Latest dose (mREM/hr)"]
+                        let dose_uSv:JSON = prop["&microSv/hr"]
+                        let dose_mRem:JSON = prop["mREM/hr"]
                         let time:JSON = prop["Latest measurement"]
                         
                         let lon = this["geometry"]["coordinates"][0]

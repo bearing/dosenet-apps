@@ -47,7 +47,7 @@ class MapViewController: UIViewController {
                         let this:JSON = features[i]
                         let prop:JSON = this["properties"]
                         let name:JSON = prop["Name"]
-                        let dose:JSON = prop["Latest dose (&microSv/hr)"]
+                        let dose:JSON = prop["&microSv/hr"]
                         let doseString:String = String(format:"%.3f",dose.double!)
                         let time:JSON = prop["Latest measurement"]
                         let timeString:String = time.string! + timeZone

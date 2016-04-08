@@ -22,11 +22,13 @@ class DosimeterGraphsViewController: UIViewController {
         case 0:
             print("Selected µSv/hr")
             dose_unit = "µSv/hr"
+            lineChartView.leftAxis.removeAllLimitLines()
             chartData.removeDataSet(chartDataSet)
             self.updatePlot( self.reducedDataUSV )
         case 1:
             print("Selected mRem/hr")
             dose_unit = "mRem/hr"
+            lineChartView.leftAxis.removeAllLimitLines()
             chartData.removeDataSet(chartDataSet)
             self.updatePlot( self.reducedDataREM )
         default:
@@ -97,7 +99,7 @@ class DosimeterGraphsViewController: UIViewController {
     
     func getData() {
         var url = "https://radwatch.berkeley.edu/sites/default/files/dosenet/"
-        url += "campolindo.csv"
+        url += "etch.csv"
         //url += (self.getShortName() + ".csv")
         //print((self.getShortName() + ".csv"))
 
@@ -309,7 +311,7 @@ class DosimeterGraphsViewController: UIViewController {
         self.chartData = LineChartData(xVals: data.times, dataSet: chartDataSet)
         self.chartData.setDrawValues(false)
         
-        let ll = ChartLimitLine(limit: self.chartData.average, label: "Average: \(NSString(format: "%.3f", self.chartData.average)) \(self.dose_unit)")
+        let ll = ChartLimitLine(limit: self.chartData.average, label: "Average: \(NSString(format: "%.4f", self.chartData.average)) \(self.dose_unit)")
         lineChartView.leftAxis.addLimitLine(ll)
         
         lineChartView.data = self.chartData
@@ -347,8 +349,9 @@ extension NSDate: Comparable { }
 
 public func stringToDate( str: String ) -> NSDate {
     let dateFormatter = NSDateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    return dateFormatter.dateFromString(str)!
+    dateFormatter.dateFormat = "yyyy-MM-DD HH:mm:ss"
+    let date = dateFormatter.dateFromString(str)
+    return date!
 }
 
 extension NSDate {
