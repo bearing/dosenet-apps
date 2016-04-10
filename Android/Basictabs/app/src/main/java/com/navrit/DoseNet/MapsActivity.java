@@ -53,43 +53,6 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     private boolean first = true;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-
-        setUpMapIfNeeded();
-
-        makepDialog();
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        userLocation = getLocation();
-
-        getParsePlotJSON(); //Main program logic
-
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.planets_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUpMapIfNeeded();
-    }
-
-    private void makepDialog(){
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Wait, fool...!");
-        pDialog.setCancelable(true);
-    }
-
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
@@ -160,7 +123,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
                         JSONObject properties = station.getJSONObject("properties");
                         String name = properties.getString("Name");
                         String latest_measurement = properties.getString("Latest measurement");
-                        double dose = properties.getDouble("Latest dose (&microSv/hr)");
+                        double dose = properties.getDouble("&microSv/hr");
 
                         Log.i("NAME ", name);
 
@@ -172,7 +135,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
                         jsonResponse += "Latest dose (&microSv/hr): " + dose + "\n\n";*/
 
                         String radiation_info = String.format("%.4f", dose)
-                                + " µSv/hr @ " + latest_measurement  + " PDT";
+                                + " µSv/hr @ " + latest_measurement  + " (Local)";
                         mMap.addMarker(new MarkerOptions()
                                         .title(name)
                                         .snippet(radiation_info)
@@ -251,6 +214,37 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+
+        setUpMapIfNeeded();
+
+        makepDialog();
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        userLocation = getLocation();
+
+        getParsePlotJSON(); //Main program logic
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.planets_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+    }
+
+    @Override
     public void onLocationChanged(Location location) {
         if (first) {
             String msg = "Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude();
@@ -285,17 +279,6 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
         Log.d("Latitude","disable");
     }
 
-    private void showpDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    // hide the progress dialog
-    private void hidepDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
-
     @Override
     public void onItemSelected(AdapterViewCompat<?> parent, View view, int position, long id) {
         // An item was selected. You can retrieve the selected item using
@@ -305,5 +288,21 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     @Override
     public void onNothingSelected(AdapterViewCompat<?> parent) {
         // Another interface callback
+    }
+
+    private void showpDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hidepDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+    }
+
+    private void makepDialog(){
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Wait, fool...!");
+        pDialog.setCancelable(true);
     }
 }
