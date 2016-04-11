@@ -6,4 +6,5 @@
     <string name="content">Modern SI unit (&#x3BC;Sv/hr) or the old unit (mRem/hr). The default is &#x3BC;Sv/hr.</string>
     <string name="agree">uSv/hr</string>
     <string name="disagree">mRem/hr</string>
+    <string name="title_activity_maps">Dosimeter Locations</string>
 </resources>
