@@ -18,4 +18,5 @@
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
         AIzaSyBjF48UPqSLQjuK663vn9wEfyzWkePCDUM
     </string>
+    <string name="google_app_id">118715</string>
 </resources>
