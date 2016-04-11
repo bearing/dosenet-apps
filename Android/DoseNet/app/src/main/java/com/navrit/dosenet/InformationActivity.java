@@ -14,6 +14,7 @@ public class InformationActivity extends AppCompatActivity{
         setContentView(R.layout.activity_information);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar.setTitle(R.string.info);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
