@@ -1,23 +1,29 @@
 package com.navrit.dosenet;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    public FloatingActionButton btn_map;
+
     public String unit_selected = "usv";
 
     @Override
@@ -25,11 +31,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.e("Unit: ", unit_selected);
-
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        //mAdapter = new DosimeterAdapter(myDataset);
+        //mRecyclerView.setAdapter(mAdapter);
+
+        btn_map = (FloatingActionButton) findViewById(R.id.fab);
+        btn_map.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view){
+        Intent map_intent = new Intent(this, MapsActivity.class);
+        startActivity(map_intent);
     }
 
     @Override
@@ -58,14 +83,14 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 unit_selected = "usv";
-                                Log.e("Unit: ", unit_selected);
+                                Log.i("Unit: ", unit_selected);
                             }
                         })
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 unit_selected = "mrem";
-                                Log.e("Unit: ", unit_selected);
+                                Log.i("Unit: ", unit_selected);
                             }
                         })
                         .show();
