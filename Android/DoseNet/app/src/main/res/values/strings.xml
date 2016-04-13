@@ -3,8 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="info">Information</string>
     <string name="title">Change units?</string>
-    <string name="content">Modern SI unit (&#x3BC;Sv/hr) or the old unit (mRem/hr). The default is &#x3BC;Sv/hr.</string>
+    <string name="content">You can choose between modern SI unit (&#x3BC;Sv/hr) or the old unit (mRem/hr). The default is &#x3BC;Sv/hr.</string>
     <string name="agree">uSv/hr</string>
     <string name="disagree">mRem/hr</string>
     <string name="title_activity_maps">Dosimeter Locations</string>
+    <string name="loading_radwatch">Still loading RadWatch website...</string>
+    <string name="finished_website">Finished loading</string>
 </resources>
