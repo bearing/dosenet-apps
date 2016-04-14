@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,11 +16,16 @@ import android.view.View;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
+    private RecyclerView rv;
     public FloatingActionButton btn_map;
 
+    private List<Dosimeter> dosimeters;
     public String unit_selected = "usv";
 
     @Override
@@ -31,6 +38,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn_map = (FloatingActionButton) findViewById(R.id.fab);
         btn_map.setOnClickListener(this);
+
+        rv = (RecyclerView)findViewById(R.id.recycler_view);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+        rv.setHasFixedSize(true);
+
+        initializeData();
+        initializeAdapter();
+    }
+
+    private void initializeData() {
+        dosimeters = new ArrayList<>();
+        dosimeters.add(new Dosimeter("A name", 0.01, "2016-09-02"));
+        dosimeters.add(new Dosimeter("A different name", 0.5, "2016-09-09"));
+        dosimeters.add(new Dosimeter("Cheeseboard", 9000, "2016-09-06"));
+    }
+
+    private void initializeAdapter() {
+        RVAdapter adapter = new RVAdapter(dosimeters);
+        rv.setAdapter(adapter);
     }
 
     @Override

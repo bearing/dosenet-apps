@@ -2,8 +2,8 @@ package com.navrit.dosenet;
 
 public class Dosimeter {
     String name;
-    String lastTime;
     double lastDose_uSv;
+    String lastTime;
     //double lastDose_mRem;
     //double distance;
     //double lat;
@@ -14,10 +14,10 @@ public class Dosimeter {
     //List<double> doses_uSv; // For dose over time plots
     //List<String> times;
 
-    Dosimeter(String name, String lastTime, double lastDose_uSv){
+    Dosimeter(String name, double lastDose_uSv, String lastTime){
         this.name = name;
-        this.lastTime = lastTime;
         this.lastDose_uSv = lastDose_uSv;
+        this.lastTime = lastTime;
     }
 
 }
