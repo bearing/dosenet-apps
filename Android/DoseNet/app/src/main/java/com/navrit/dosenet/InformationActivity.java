@@ -1,7 +1,5 @@
 package com.navrit.dosenet;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -12,8 +10,8 @@ import android.webkit.WebViewClient;
 
 public class InformationActivity extends AppCompatActivity{
 
-    public ProgressDialog progressDialog = null;
     private CoordinatorLayout coordinatorLayout;
+    private Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +20,8 @@ public class InformationActivity extends AppCompatActivity{
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, getString(R.string.loading_radwatch), Snackbar.LENGTH_LONG);
-
+        snackbar = Snackbar.make(coordinatorLayout,
+                getString(R.string.loading_radwatch), Snackbar.LENGTH_LONG);
         snackbar.show();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -42,9 +39,8 @@ public class InformationActivity extends AppCompatActivity{
             }
 
             public void onPageFinished(WebView view, String url) {
-                if (progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                }
+                Snackbar snackbar_finished = Snackbar.make(coordinatorLayout,getString(R.string.finished_website), Snackbar.LENGTH_LONG);
+                snackbar_finished.show();
             }
         });
 
