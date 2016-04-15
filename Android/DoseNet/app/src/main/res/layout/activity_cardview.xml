@@ -4,48 +4,37 @@
     android:padding="16dp"
     >
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:layout_height="match_parent"
+            android:padding="12dp"
             >
 
-            <TextView
+            <TextView android:id="@+id/dosimeter_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                />
+
+            <TextView android:id="@+id/dosimeter_lastDose_uSv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/dosimeter_name"
+                android:layout_below="@+id/dosimeter_name"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"
-                android:layout_marginEnd="16dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/dosimeter_lastDose_uSv"
-                android:layout_toEndOf="@+id/dosimeter_name"
-                android:layout_alignParentBottom="true"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
                 android:textSize="14sp"
-                android:layout_marginEnd="16dp"
                 />
 
-            <TextView
+            <TextView android:id="@+id/dosimeter_lastTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/dosimeter_lastTime"
-                android:layout_toEndOf="@+id/dosimeter_lastDose_uSv"
+                android:layout_below="@+id/dosimeter_name"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
                 android:textSize="12sp"
                 />
 

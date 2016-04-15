@@ -1,6 +1,5 @@
 package com.navrit.dosenet;
 
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
