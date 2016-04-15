@@ -50,9 +50,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initializeData() {
         dosimeters = new ArrayList<>();
-        dosimeters.add(new Dosimeter("A name", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("A different name", 0.5, "2016-09-09 14:00"));
-        dosimeters.add(new Dosimeter("Cheeseboard", 9000, "2016-09-06 21:00 (local)"));
+        for (int i = 0; i < 10; i++){
+            dosimeters.add(new Dosimeter("A name", 0.01, "2016-09-02 04:00"));
+            dosimeters.add(new Dosimeter("A different name", 0.5, "2016-09-09 14:00"));
+            dosimeters.add(new Dosimeter("Cheeseboard", 9000, "2016-09-06 21:00 (local)"));
+        }
     }
 
     private void initializeAdapter() {
