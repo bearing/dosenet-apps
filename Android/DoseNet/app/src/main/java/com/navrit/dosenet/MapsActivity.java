@@ -10,9 +10,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -38,12 +36,12 @@ public class MapsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
         pDialog.setCancelable(true);
 
         setUpMapIfNeeded();
-        // making json object request
         makeJsonObjectRequest();
     }
 
@@ -87,15 +85,15 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        LatLng map_center = new LatLng(37.87, -122.27);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(map_center, 11));
-        CameraPosition cameraPosition = CameraPosition.builder()
+        LatLng map_center = new LatLng(37, -164);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(map_center, 1));
+        /*CameraPosition cameraPosition = CameraPosition.builder()
                 .target(map_center)
                 .zoom(11)
                 .bearing(0)
                 .build();
         // Animate the change in camera view over 2 seconds
-        //map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000, null);
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000, null);*/
     }
 
     /**
