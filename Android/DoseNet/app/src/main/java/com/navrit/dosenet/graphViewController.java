@@ -17,8 +17,8 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-public class csvModel {
-    private static String TAG = csvModel.class.getSimpleName();
+public class graphViewController {
+    private static String TAG = graphViewController.class.getSimpleName();
 
     public void getCSV(){
         String url_csv = "https://radwatch.berkeley.edu/sites/default/files/dosenet/"
