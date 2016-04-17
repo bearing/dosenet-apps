@@ -31,6 +31,8 @@ public class MapsActivity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private ProgressDialog pDialog;
     private String jsonResponse; // temporary string to show the parsed response
+    String urlJsonObj = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?" +
+            UUID.randomUUID().toString().replaceAll("-","");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +104,6 @@ public class MapsActivity extends FragmentActivity {
     private void makeJsonObjectRequest() {
         showpDialog();
 
-        String urlJsonObj = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?" +
-                UUID.randomUUID().toString().replaceAll("-","");
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.GET,
                 urlJsonObj, null, new Response.Listener<JSONObject>() {
             @Override
@@ -118,36 +118,32 @@ public class MapsActivity extends FragmentActivity {
                     for (int i = 0; i < station_array.length(); i++) {
                         JSONObject station = station_array.getJSONObject(i);
 
-                        JSONObject geometry = station
-                                .getJSONObject("geometry");
+                        JSONObject geometry = station.getJSONObject("geometry");
                         JSONArray coordinates = geometry.getJSONArray("coordinates");
                         double latitude = coordinates.getDouble(0);
                         double longitude = coordinates.getDouble(1);
 
-                        JSONObject properties = station
-                                .getJSONObject("properties");
+                        JSONObject properties = station.getJSONObject("properties");
                         String name = properties.getString("Name");
                         String latest_measurement = properties.getString("Latest measurement");
                         double dose = properties.getDouble("&microSv/hr");
 
-                        jsonResponse = "";
+                        /*jsonResponse = "";
                         jsonResponse += "Name: " + name + "\n\n";
                         jsonResponse += "Latitude, Longitude: " + longitude + ", " + latitude + "\n\n";
                         jsonResponse += "Latest Measurement: " + latest_measurement + "\n\n";
-                        jsonResponse += "Latest dose (&microSv/hr): " + dose + "\n\n";
+                        jsonResponse += "Latest dose (&microSv/hr): " + dose + "\n\n";*/
                         //jsonResponse += ": " +  + "\n\n";
 
                         String radiation_info = String.format("%.4f", dose)
-                                + " µSv/hr @ " +
-                                latest_measurement;
+                                + " µSv/hr @ " + latest_measurement;
                         mMap.addMarker(new MarkerOptions()
-                                .title(name)
-                                .snippet(radiation_info)
+                                .title(name).snippet(radiation_info)
                                 .position(new LatLng(longitude, latitude))
                         );
 
                         //txtResponse.setText(jsonResponse);
-                        Log.v("JSON", jsonResponse);
+                        //Log.v("JSON", jsonResponse);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
