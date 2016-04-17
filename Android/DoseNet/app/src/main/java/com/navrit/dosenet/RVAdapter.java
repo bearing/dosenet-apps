@@ -14,13 +14,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DosimeterViewHolde
         CardView cv;
         TextView dosimeterName;
         TextView dosimeterLastDose;
+        TextView dosimeterDoseUnit;
         TextView dosimeterLastTime;
 
         DosimeterViewHolder(View itemView){
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cardview);
             dosimeterName = (TextView)itemView.findViewById(R.id.dosimeter_name);
-            dosimeterLastDose = (TextView)itemView.findViewById(R.id.dosimeter_lastDose_uSv);
+            dosimeterLastDose = (TextView)itemView.findViewById(R.id.dosimeter_lastDose);
+            dosimeterDoseUnit = (TextView)itemView.findViewById(R.id.dosimeter_doseUnit);
             dosimeterLastTime = (TextView)itemView.findViewById(R.id.dosimeter_lastTime);
         }
     }
@@ -49,6 +51,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DosimeterViewHolde
         String lastDose = String.valueOf(dosimeters.get(i).lastDose_uSv);
         personViewHolder.dosimeterName.setText(dosimeters.get(i).name);
         personViewHolder.dosimeterLastDose.setText(lastDose);
+        personViewHolder.dosimeterDoseUnit.setText(dosimeters.get(i).unitSelected);
         personViewHolder.dosimeterLastTime.setText(dosimeters.get(i).lastTime);
     }
 

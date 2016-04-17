@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public FloatingActionButton btn_map;
 
     private List<Dosimeter> dosimeters;
-    public String unit_selected = "usv";
+    public String unitSelected = "µSv/hr";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +65,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initializeData() {
         dosimeters = new ArrayList<>();
 
-        dosimeters.add(new Dosimeter("A name", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Koriyama", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("A name", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Koriyama", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("A name", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Koriyama", 0.01, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
     }
 
     private void initializeAdapter() {
@@ -112,15 +112,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                unit_selected = "usv";
-                                Log.i("Unit: ", unit_selected);
+                                unitSelected = "µSv/hr";
+                                Log.i("Unit: ", unitSelected);
                             }
                         })
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                unit_selected = "mrem";
-                                Log.i("Unit: ", unit_selected);
+                                unitSelected = "mRem/hr";
+                                Log.i("Unit: ", unitSelected);
                             }
                         })
                         .show();
