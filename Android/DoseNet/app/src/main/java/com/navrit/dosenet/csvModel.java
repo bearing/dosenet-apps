@@ -18,13 +18,14 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 public class csvModel {
-    public String url_geojson = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?"
-            + UUID.randomUUID().toString().replace("-", "");
     private static String TAG = csvModel.class.getSimpleName();
 
-    public void getCSVs(){
+    public void getCSV(){
+        String url_csv = "https://radwatch.berkeley.edu/sites/default/files/dosenet/"
+                + getShortName(dosimeter.name) + "?"
+                + UUID.randomUUID().toString().replace("-", "");
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url_geojson, null, new Response.Listener<JSONObject>() {
+                url_csv, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.v(TAG, response.toString());
