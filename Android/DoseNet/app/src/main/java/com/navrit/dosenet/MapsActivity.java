@@ -43,7 +43,7 @@ public class MapsActivity extends FragmentActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDarker));
         }
 
         setContentView(R.layout.activity_maps);

@@ -16,12 +16,13 @@
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coord_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tool_bar"
+        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:scrollbars="vertical"
-            android:paddingTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
@@ -33,9 +34,10 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:src="@drawable/ic_place_white"
+            android:elevation="4dp"
             app:layout_anchor="@id/recycler_view"
             app:layout_anchorGravity="bottom|right|end"
-            app:backgroundTint="@color/colorPrimaryDark"
+            app:backgroundTint="@color/colorPrimaryDarker"
             app:rippleColor="@color/colorAccent" />
 
     </android.support.design.widget.CoordinatorLayout>
