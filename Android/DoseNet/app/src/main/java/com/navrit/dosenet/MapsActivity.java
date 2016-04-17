@@ -3,6 +3,7 @@ package com.navrit.dosenet;
 import java.util.UUID;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -53,7 +54,11 @@ public class MapsActivity extends FragmentActivity {
         pDialog.setCancelable(true);
 
         setUpMapIfNeeded();
+        showpDialog();
         makeJsonObjectRequest();
+        //Intent map_intent = getIntent();
+        //String firstKeyName = map_intent.getStringExtra("firstKeyName"); // will return "FirstKeyValue"
+        hidepDialog();
     }
 
     @Override
@@ -111,8 +116,6 @@ public class MapsActivity extends FragmentActivity {
      * Method to make json object request where json response starts with {
      * */
     private void makeJsonObjectRequest() {
-        showpDialog();
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.GET,
                 urlJsonObj, null, new Response.Listener<JSONObject>() {
             @Override
@@ -160,7 +163,6 @@ public class MapsActivity extends FragmentActivity {
                             "Error: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
                 }
-                hidepDialog();
             }
         }, new Response.ErrorListener() {
 
@@ -169,12 +171,9 @@ public class MapsActivity extends FragmentActivity {
                 VolleyLog.e(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
-                // hide the progress dialog
-                hidepDialog();
             }
         });
 
-        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 

@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view){
         Intent map_intent = new Intent(this, MapsActivity.class);
+        //https://stackoverflow.com/questions/2405120/how-to-start-an-intent-by-passing-some-parameters-to-it
+        // map_intent.putExtra("JSON", ... );
+
         startActivity(map_intent);
     }
 
@@ -96,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.information:
                 Intent info_intent = new Intent(this, InformationActivity.class);
@@ -128,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
