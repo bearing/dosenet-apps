@@ -47,12 +47,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.DosimeterViewHolde
     }
 
     @Override
-    public void onBindViewHolder(DosimeterViewHolder personViewHolder, int i) {
+    public void onBindViewHolder(DosimeterViewHolder viewHolder, int i) {
         String lastDose = String.valueOf(dosimeters.get(i).lastDose_uSv);
-        personViewHolder.dosimeterName.setText(dosimeters.get(i).name);
-        personViewHolder.dosimeterLastDose.setText(lastDose);
-        personViewHolder.dosimeterDoseUnit.setText(dosimeters.get(i).unitSelected);
-        personViewHolder.dosimeterLastTime.setText(dosimeters.get(i).lastTime);
+        viewHolder.dosimeterName.setText(dosimeters.get(i).name);
+        viewHolder.dosimeterLastDose.setText(lastDose);
+        viewHolder.dosimeterDoseUnit.setText(dosimeters.get(i).unitSelected);
+        viewHolder.dosimeterLastTime.setText(dosimeters.get(i).lastTime);
     }
 
     @Override
