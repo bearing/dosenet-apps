@@ -15,18 +15,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.navrit.dosenet.app.AppController;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
     private RecyclerView rv;
     public FloatingActionButton btn_map;
+    private static String TAG = MainActivity.class.getSimpleName();
 
     private List<Dosimeter> dosimeters;
     public String unitSelected = "µSv/hr";
@@ -65,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initializeData() {
         dosimeters = new ArrayList<>();
 
+        makeJsonObjectRequest();
+
         dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
         dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
         dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
@@ -79,6 +96,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initializeAdapter() {
         RVAdapter adapter = new RVAdapter(dosimeters);
         rv.setAdapter(adapter);
+    }
+
+    /**
+     * Method to make json object request where json response starts with {
+     * */
+    private void makeJsonObjectRequest() {
+        String urlJsonObj = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?" +
+                UUID.randomUUID().toString().replaceAll("-","");
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsonObj, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.v(TAG, response.toString());
+
+                try {
+                    JSONArray station_array = response.getJSONArray("features");
+                    for (int i = 0; i < station_array.length(); i++) {
+                        JSONObject station = station_array.getJSONObject(i);
+
+                        JSONObject geometry = station.getJSONObject("geometry");
+                        JSONArray coordinates = geometry.getJSONArray("coordinates");
+                        double latitude = coordinates.getDouble(0);
+                        double longitude = coordinates.getDouble(1);
+
+                        JSONObject properties = station.getJSONObject("properties");
+                        String name = properties.getString("Name");
+                        String latest_measurement = properties.getString("Latest measurement");
+                        double dose = properties.getDouble("&microSv/hr");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
     @Override

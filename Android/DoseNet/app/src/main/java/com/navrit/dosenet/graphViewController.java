@@ -39,7 +39,9 @@ public class graphViewController {
 
     public void getCSV(){
         String url_csv = "https://radwatch.berkeley.edu/sites/default/files/dosenet/"
-                + getShortName(dosimeter.name) + "?"
+                //+ getShortName(dosimeter.name)
+                + "etch.csv"
+                + "?"
                 + UUID.randomUUID().toString().replace("-", "");
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url_csv, null, new Response.Listener<JSONObject>() {

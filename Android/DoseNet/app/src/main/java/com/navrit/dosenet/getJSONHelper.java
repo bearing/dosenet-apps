@@ -22,7 +22,9 @@ public class getJSONHelper {
     String urlJsonObj = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?" +
             UUID.randomUUID().toString().replaceAll("-","");
 
-    private String
+    /*private String getNames(){
+
+    }*/
 
     /**
      * Method to make json object request where json response starts with {
