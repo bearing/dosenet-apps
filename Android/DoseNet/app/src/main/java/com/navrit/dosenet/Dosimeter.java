@@ -3,14 +3,14 @@ package com.navrit.dosenet;
 public class Dosimeter {
     String name;
     double lastDose_uSv;
-    String lastTime;
     double lastDose_mRem;
     String unitSelected;
+    String lastTime;
     //double distance;
     //double lat;
     //double lon;
 
-    // Image for card view
+    // Image (seal/crest) for card view
 
     //List<double> doses_uSv; // For dose over time plots
     //List<String> times;
