@@ -4,10 +4,7 @@ package com.navrit.dosenet;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.navrit.dosenet.app.AppController;
 
@@ -15,7 +12,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+
+final class csvStruct{
+    private static String TAG = graphViewController.class.getSimpleName();
+
+    List<Date> times;
+    List<Double> doses;
+
+    private int getLength(){
+        if (doses.size() == times.size()){
+            return doses.size();
+        } else {
+            Log.e(TAG,": ERROR: Mismatch between Size of doses and times variables.");
+            return 0;
+        }
+    }
+
+
+}
 
 public class graphViewController {
     private static String TAG = graphViewController.class.getSimpleName();
