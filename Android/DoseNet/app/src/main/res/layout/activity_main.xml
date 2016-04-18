@@ -40,6 +40,7 @@
             app:layout_anchorGravity="bottom|right|end"
             app:backgroundTint="@color/colorPrimaryDarker"
             app:rippleColor="@color/colorAccent"
+            app:layout_behavior=".ScrollAwareFABBehavior"
             />
 
     </android.support.design.widget.CoordinatorLayout>
