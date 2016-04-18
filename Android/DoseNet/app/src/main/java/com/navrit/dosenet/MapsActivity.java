@@ -34,7 +34,6 @@ public class MapsActivity extends FragmentActivity {
     private static String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private ProgressDialog pDialog;
-    private String jsonResponse; // temporary string to show the parsed response
     String urlJsonObj = "https://radwatch.berkeley.edu/sites/default/files/output.geojson?" +
             UUID.randomUUID().toString().replaceAll("-","");
 
