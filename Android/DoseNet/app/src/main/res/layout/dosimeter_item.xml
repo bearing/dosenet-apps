@@ -6,15 +6,18 @@
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
     android:paddingBottom="6dp"
-    android:elevation="4dp"
-    card_view:cardCornerRadius="4dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardElevation="3dp"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
-        android:background="#ECEFF1"
+        android:paddingStart="18dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         >
 
         <TextView android:id="@+id/dosimeter_name"

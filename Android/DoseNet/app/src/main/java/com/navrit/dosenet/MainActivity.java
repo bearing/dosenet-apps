@@ -82,10 +82,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         makeJsonObjectRequest();
 
-        dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("LBL", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("Etcheverry Hall", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("Koriyama City Hall", 0.01, unitSelected, "2016-09-02 04:00"));
+        dosimeters.add(new Dosimeter("A reaalllly loooooooong name, seriously", 0.01, unitSelected, "2016-09-02 04:00"));
         dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
         dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
         dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
