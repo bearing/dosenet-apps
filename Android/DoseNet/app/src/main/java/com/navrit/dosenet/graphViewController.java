@@ -16,24 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-final class csvStruct{
-    private static String TAG = graphViewController.class.getSimpleName();
-
-    List<Date> times;
-    List<Double> doses;
-
-    private int getLength(){
-        if (doses.size() == times.size()){
-            return doses.size();
-        } else {
-            Log.e(TAG,": ERROR: Mismatch between Size of doses and times variables.");
-            return 0;
-        }
-    }
-
-
-}
-
 public class graphViewController {
     private static String TAG = graphViewController.class.getSimpleName();
 
