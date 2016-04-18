@@ -24,26 +24,35 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.navrit.dosenet.app.AppController;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Toolbar toolbar;
     private RecyclerView rv;
     public FloatingActionButton btn_map;
     private static String TAG = MainActivity.class.getSimpleName();
 
-    private List<Dosimeter> dosimeters;
+    private List<Dosimeter> dosimeterList;
     public String unitSelected = "µSv/hr";
 
     @Override
@@ -57,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
         // Display icon in the toolbar
@@ -73,28 +82,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
+        JodaTimeAndroid.init(this);
         initializeData();
-        initializeAdapter();
     }
 
     private void initializeData() {
-        dosimeters = new ArrayList<>();
-
+        dosimeterList = new ArrayList<>();
+        Log.d(TAG,">>> Started JSON");
         makeJsonObjectRequest();
-
-        dosimeters.add(new Dosimeter("LBL", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Etcheverry Hall", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Koriyama City Hall", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("A reaalllly loooooooong name, seriously", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("A name", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("sdthgw3fpdshg", 0.01, unitSelected, "2016-09-02 04:00"));
-        dosimeters.add(new Dosimeter("Koriyama", 0.01, unitSelected, "2016-09-02 04:00"));
+        Log.d(TAG,">>> Passed JSON");
     }
 
     private void initializeAdapter() {
-        RVAdapter adapter = new RVAdapter(dosimeters);
+        RVAdapter adapter = new RVAdapter(dosimeterList);
         rv.setAdapter(adapter);
     }
 
@@ -108,6 +108,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 urlJsonObj, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Date date = Calendar.getInstance().getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String today = sdf.format(date);
+                TimeZone tzLocal = TimeZone.getDefault();
+                //Log.e(TAG,today);
+                Log.e(TAG,tzLocal.getID());
+
+                DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+
+                Log.d(TAG, ">>> Got JSON response");
                 Log.v(TAG, response.toString());
 
                 try {
@@ -123,8 +133,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JSONObject properties = station.getJSONObject("properties");
                         String name = properties.getString("Name");
                         String latest_measurement = properties.getString("Latest measurement");
-                        double dose = properties.getDouble("&microSv/hr");
+                        String timezone = properties.getString("timezone");
+
+                        //TODO: Convert latest_measurement to UTC, then local time
+
+                        /*DateTime dt = new DateTime(dtf.parseDateTime(latest_measurement));
+                        Date d = dt.toLocalDateTime().toDate();
+                        DateTimeZone zone = DateTimeZone.forID(timezone);
+                        TimeZone tz = zone.toTimeZone();
+                        //Log.e(TAG,">>>"+sdf.format(d));
+                        */
+
+                        String latest_date = String.valueOf(latest_measurement.substring(0,10));
+                        //DateTime dateTime = DateTime.parse(latest_measurement, dtf);
+                        //latest_measurement + timezone
+                        //latest_measurement = dateTime.withZone(zone).toString();
+                        //Log.e(TAG, latest_measurement);
+
+
+                        //Log.w(TAG,today+" "+latest_date);
+                        if (today.equals(latest_date)) {
+                            Log.v(TAG,">>> TODAYYYY");
+                            latest_measurement = "Today " + latest_measurement.substring(11)
+                                    + " (server time)";
+                        } else {
+                            Log.v(TAG,">>> Not today");
+                            latest_measurement += " (server time)";
+                            //latest_measurement = dt.withZone(zone).toString().replace("T"," ").replace(".000", " GMT");
+                        }
+
+
+                        double dose;
+                        switch(unitSelected){
+                            case "µSv/hr":
+                                dose = properties.getDouble("&microSv/hr");
+                                break;
+                            case "mRem/hr":
+                                dose = properties.getDouble("mRem/hr");
+                                break;
+                            default:
+                                dose = properties.getDouble("&microSv/hr");
+                        }
+                        dose = (double) Math.round(dose * 1000) / 1000;
+
+                        dosimeterList.add(
+                                new Dosimeter(name, dose, unitSelected, latest_measurement,
+                                        longitude, latitude)
+                        );
+                        //Log.i(TAG, dosimeterList.get(i).name);
                     }
+                    initializeAdapter();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),
@@ -133,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }, new Response.ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e(TAG, "Error: " + error.getMessage());
