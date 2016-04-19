@@ -37,7 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +48,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView rv;
-    public FloatingActionButton btn_map;
+    public FloatingActionButton fab;
     private static String TAG = MainActivity.class.getSimpleName();
 
     private List<Dosimeter> dosimeterList;
@@ -74,13 +73,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setLogo(R.mipmap.dosenet_logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-        btn_map = (FloatingActionButton) findViewById(R.id.fab);
-        btn_map.setOnClickListener(this);
-
         rv = (RecyclerView)findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
 
         JodaTimeAndroid.init(this);
         initializeData();
@@ -108,9 +107,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 urlJsonObj, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Date date = Calendar.getInstance().getTime();
+                Date dateToday = Calendar.getInstance().getTime();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                String today = sdf.format(date);
+                String today = sdf.format(dateToday);
                 TimeZone tzLocal = TimeZone.getDefault();
                 //Log.e(TAG,today);
                 Log.e(TAG,tzLocal.getID());
@@ -135,30 +134,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String latest_measurement = properties.getString("Latest measurement");
                         String timezone = properties.getString("timezone");
 
-                        //TODO: Convert latest_measurement to UTC, then local time
+                        //Convert latest_measurement to UTC, then local time
 
-                        /*DateTime dt = new DateTime(dtf.parseDateTime(latest_measurement));
-                        Date d = dt.toLocalDateTime().toDate();
-                        DateTimeZone zone = DateTimeZone.forID(timezone);
-                        TimeZone tz = zone.toTimeZone();
-                        //Log.e(TAG,">>>"+sdf.format(d));
-                        */
+                        DateTimeZone dateTimeZone = DateTimeZone.forID(timezone);
+                        DateTime date = dtf.withZone(dateTimeZone).parseDateTime(latest_measurement);
+                        //DateTime UTCDate = date.toDateTime(DateTimeZone.UTC);
+                        TimeZone tz2 = TimeZone.getDefault();
+                        DateTime local_dt = new DateTime(date, DateTimeZone.forID(tz2.getID()));
+                        LocalDateTime l2 = new LocalDateTime(local_dt);
+                        Log.e(TAG,timezone+"\n\t\t\t\t\t"+local_dt+" "+latest_measurement);
 
-                        String latest_date = String.valueOf(latest_measurement.substring(0,10));
-                        //DateTime dateTime = DateTime.parse(latest_measurement, dtf);
-                        //latest_measurement + timezone
-                        //latest_measurement = dateTime.withZone(zone).toString();
-                        //Log.e(TAG, latest_measurement);
+                        DateTime latest_date_dt = dtf.withZone(dateTimeZone).parseDateTime(latest_measurement);
+                        String latest_date = latest_date_dt.toLocalDate().toString();
 
+                        if (!timezone.equals("America/Los_Angeles")){                        //Japan
+                            DateTime dtLocal = date.withZone(DateTimeZone.forID
+                                    (tzLocal.getID()));
+
+                            //Log.e(TAG,">> "+dtLocal.plusHours(HOUR SHIFT));
+                        }
 
                         //Log.w(TAG,today+" "+latest_date);
                         if (today.equals(latest_date)) {
-                            Log.v(TAG,">>> TODAYYYY");
-                            latest_measurement = "Today " + latest_measurement.substring(11)
-                                    + " (server time)";
+                            latest_measurement = local_dt.toLocalTime()
+                                    .toString().replace(".000", "");
                         } else {
-                            Log.v(TAG,">>> Not today");
-                            latest_measurement += " (server time)";
+                            latest_measurement = local_dt.toLocalDateTime()
+                                    .toString().replace("T"," ").replace(".000", "");
                             //latest_measurement = dt.withZone(zone).toString().replace("T"," ").replace(".000", " GMT");
                         }
 
