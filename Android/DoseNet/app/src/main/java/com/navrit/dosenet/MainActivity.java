@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         statusBarHack();
         setContentView(R.layout.activity_main);
 
-        setupWindowAnimations();
         setupToolbar();
         setupLayout();
         setupFloatingActionButton();
@@ -238,15 +237,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-    }
-
-    private void setupWindowAnimations() {
-        // Re-enter transition is executed when returning to this activity
-        Slide slideTransition = new Slide();
-        slideTransition.setSlideEdge(Gravity.LEFT);
-        slideTransition.setDuration(1000);
-        getWindow().setReenterTransition(slideTransition);
-        getWindow().setExitTransition(slideTransition);
     }
 
     @Override
