@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private RecyclerView rv;
     public FloatingActionButton fab;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private static String TAG = MainActivity.class.getSimpleName();
 
     private List<Dosimeter> dosimeterList;
@@ -83,6 +85,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         JodaTimeAndroid.init(this);
         initializeData();
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshItems();
+            }
+            void refreshItems() {
+                // Load items
+                initializeData();
+
+                // Load complete
+                onItemsLoadComplete();
+            }
+
+            void onItemsLoadComplete() {
+                // Update the adapter and notify data set changed
+                // ...
+
+                // Stop refresh animation
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void initializeData() {
@@ -90,11 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG,">>> Started JSON");
         makeJsonObjectRequest();
         Log.d(TAG,">>> Passed JSON");
-    }
-
-    private void initializeAdapter() {
-        RVAdapter adapter = new RVAdapter(dosimeterList);
-        rv.setAdapter(adapter);
     }
 
     /**
@@ -111,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String today = sdf.format(dateToday);
                 TimeZone tzLocal = TimeZone.getDefault();
-                //Log.e(TAG,today);
-                Log.e(TAG,tzLocal.getID());
+                //Log.d(TAG,today);
+                Log.d(TAG,tzLocal.getID());
 
                 DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -202,6 +226,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+    private void initializeAdapter() {
+        RVAdapter adapter = new RVAdapter(dosimeterList);
+        rv.setAdapter(adapter);
     }
 
     @Override
